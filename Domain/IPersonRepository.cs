@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    internal interface IPersonRepository
+    public interface IPersonRepository
     {
         IList<Person> GetAll();
         IList<Person> FindAll();
         IList<Person> FindByName(string name);
         IList<Person> GetById(int id);
         void Add(Person person);
+        void Save();
         void Remove(Person person);
         void Update(Person person);
+        bool FirstRun();
 
     }
 }

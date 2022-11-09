@@ -7,21 +7,23 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Presentation;
+using Domain;
 
 namespace WorkerService
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        private readonly IPersonRepository _repository;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(IPersonRepository repository)
         {
-            _logger = logger;
+            _repository = repository;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CreateSpecificCulture("pt-BR");
+            _repository.FirstRun();
             Controller.menu();
         }
     }

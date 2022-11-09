@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Presentation
 {
     public class Presentation
     {
+        private const string pressioneQualquerTecla = "Pressione qualquer tecla para exibir o menu principal...";
         public void listOptions()
         {
             consoleWriter("Selecione uma das opções abaixo:");
@@ -17,13 +19,37 @@ namespace Presentation
             consoleWriter("2 - Adicionar nova pessoa");
             consoleWriter("3 - Sair");
         }
-        public static void consoleWriter(string write)
+        public void pressAnyKey()
+        {
+            consoleWriter(pressioneQualquerTecla);
+        }
+        public void consoleWriter(string write)
         {
             Console.WriteLine(write);
         }
-        public static void consoleWriter()
+        public void consoleWriter()
         {
             Console.WriteLine();
+        }
+        public void consoleWriter(string write1, string write2)
+        {
+            consoleWriter(write1);
+            consoleWriter(write2);
+        }
+        public void consoleWriter(List<String> lista)
+        {
+            foreach (String str in lista)
+            {
+                consoleWriter(str);
+            }
+        }
+        public string consoleRead()
+        {
+            return Console.ReadLine();
+        }
+        public int consoleRead(int fake)
+        {
+            return Int32.Parse(Console.ReadLine());
         }
         public void pesquisarPessoas(IList<Person> pessoas)
         {

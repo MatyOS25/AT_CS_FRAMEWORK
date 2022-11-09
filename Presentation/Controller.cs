@@ -9,18 +9,20 @@ namespace Presentation
 {
     public class Controller
     {
-        private const string pressioneQualquerTecla = "Pressione qualquer tecla para exibir o menu principal...";
+        private static Presentation _presentation;
+
+        public Controller(Presentation presentation)
+        {
+            _presentation = presentation;
+        }
         public static void menu()
         {
             string option;
             do
             {
-                PreMenu();
+                _presentation.listOptions();
 
-
-                MenuPrincipal();
-
-                int option = Int32.Parse(Console.ReadLine());
+                int option = _presentation.consoleRead(0);
                 switch (option)
                 {
                     case 1:
@@ -33,11 +35,11 @@ namespace Presentation
                         return false;
 
                     default:
-                        Presentation.consoleWriter("Escreva um número válido para prosseguir")
+                        _presentation.consoleWriter("Escreva um número válido para prosseguir");
                         return false;
                 }
 
-                Console.WriteLine(pressioneQualquerTecla);
+                _presentation.pressAnyKey();
                 Console.ReadKey();
             }
             while (option != "5");
@@ -51,48 +53,31 @@ namespace Presentation
 
             while (ativo == 2)
             {
-                Console.WriteLine("Digite o nome da pessoa que deseja adicionar: ");
+                _presentation.consoleWriter("Digite o nome da pessoa que deseja adicionar: ");
                 nome = Console.ReadLine();
-                Console.WriteLine("Digite o sobrenome da pessoa que deseja adicionar: ");
+                _presentation.consoleWriter("Digite o sobrenome da pessoa que deseja adicionar: ");
                 sobrenome = Console.ReadLine();
-                Console.WriteLine("Digite a data de aniversário no formato dd/MM/yyyy: ");
+                _presentation.consoleWriter("Digite a data de aniversário no formato dd/MM/yyyy: ");
                 nascimento = DateTime.Parse(Console.ReadLine());
-                Console.WriteLine();
-                Console.WriteLine("Os dados abaixo estão corretos?");
-                Console.WriteLine($"Nome: {nome} {sobrenome}");
-                Console.WriteLine($"Data de Aniversário: {nascimento}");
-                Console.WriteLine($"1 - Sim");
-                Console.WriteLine($"2 - Não");
+                _presentation.consoleWriter();
+                _presentation.consoleWriter(new List<String>() {
+                    "Os dados abaixo estão corretos?",
+                    $"Nome: {nome} {sobrenome}",
+                    $"Data de Aniversário: {nascimento}",
+                    $"1 - Sim", $"2 - Não"
+                });
                 try
                 {
                     ativo = Int32.Parse(Console.ReadLine());
                 }
                 catch
                 {
-                    Console.WriteLine("Insira um número válido ou verifique se as informações estão no padrão correto.");
+                    _presentation.consoleWriter("Insira um número válido ou verifique se as informações estão no padrão correto.");
                 }
             }
             pessoas.Add(new Person(nome, sobrenome, nascimento));
             Console.WriteLine($"Adicionado");
             Console.WriteLine();
-        }
-        private static void PreMenu()
-        {
-            Console.WriteLine("Últimas Séries adicionados: ");
-            _repositorio.ShowLastTvShows();
-            Console.WriteLine(pressioneQualquerTecla);
-            Console.ReadLine();
-        }
-        void MenuPrincipal()
-        {
-            Console.Clear();
-            Console.WriteLine("*** Gerenciador de Séries *** ");
-            Console.WriteLine("1 - Pesquisar Séries:");
-            Console.WriteLine("2 - Adicionar Série:");
-            Console.WriteLine("3 - Alterar Série:");
-            Console.WriteLine("4 - Excluir Série:");
-            Console.WriteLine("5 - Sair e Salvar:");
-            Console.WriteLine("\nEscolha uma das opções acima: ");
         }
         void PesquisarTvShow()
         {

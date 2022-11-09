@@ -8,18 +8,22 @@ namespace Domain
 {
     public class Person
     {
-        private string Name { get; set; }
-        private string Sobrenome { get; set; }
-        private DateTime Nascimento { get; set; }
-
         public Person(string name, string sobrenome, DateTime nascimento)
         {
+            Id = Guid.NewGuid();
             Name = name;
             Sobrenome = sobrenome;
             Nascimento = nascimento;
         }
+        private Guid Id { get; set; }
+        private string Name { get; set; }
+        private string Sobrenome { get; set; }
+        private DateTime Nascimento { get; set; }
 
-
+        public override string ToString()
+        {
+            return $"{Id};{Name};{Sobrenome};{Nascimento};{birthDay(Nascimento)}";
+        }
         public string showPerson()
         {
             return Name;
@@ -34,7 +38,7 @@ namespace Domain
 
         }
 
-        void birthDay(DateTime nascimento)
+        private string birthDay(DateTime nascimento)
         {
             DateTime aniverAnoSeguinte = new DateTime(DateTime.Today.Year + 1, nascimento.Month, nascimento.Day);
             DateTime aniverAnoAtual = new DateTime(DateTime.Today.Year, nascimento.Month, nascimento.Day);
@@ -45,16 +49,15 @@ namespace Domain
 
             if (calcPresente > 0)
             {
-                Console.WriteLine($"Faltam {calcPresente} dias para esse aniversário");
+                return $"Faltam {calcPresente} dias para esse aniversário";
             }
             else if (calcPresente < 0)
             {
-                Console.WriteLine($"Faltam {calcFuturo} dias para esse aniversário");
+                return $"Faltam {calcFuturo} dias para esse aniversário";
             }
-
             else
             {
-                Console.WriteLine($"Essa Pessoa está fazendo aniversário!!");
+                return $"Essa Pessoa está fazendo aniversário!!";
             }
         }
 
