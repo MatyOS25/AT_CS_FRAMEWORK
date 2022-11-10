@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerService", "WorkerService\WorkerService.csproj", "{8FEAC945-3ED1-4E8F-99F2-CCE9E3D73A31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerService", "WorkerService\WorkerService.csproj", "{8FEAC945-3ED1-4E8F-99F2-CCE9E3D73A31}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B063520C-7FBF-4F11-B4DD-467504E8A997} = {B063520C-7FBF-4F11-B4DD-467504E8A997}
 	EndProjectSection
@@ -16,6 +16,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentatio
 	ProjectSection(ProjectDependencies) = postProject
 		{EAC03AFD-3B89-44BF-B74B-F7423BFC7E61} = {EAC03AFD-3B89-44BF-B74B-F7423BFC7E61}
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apresentação", "Apresentação", "{EF6BCC4E-7DF6-4556-BCCB-1DD177CD7359}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domínio", "Domínio", "{C905BD52-9559-4CB5-A38C-CB10019D704A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistência", "Persistência", "{BCFB72CD-96BC-4E37-A5B7-E3793CC4BB2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +48,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8FEAC945-3ED1-4E8F-99F2-CCE9E3D73A31} = {EF6BCC4E-7DF6-4556-BCCB-1DD177CD7359}
+		{EAC03AFD-3B89-44BF-B74B-F7423BFC7E61} = {C905BD52-9559-4CB5-A38C-CB10019D704A}
+		{59F9C4BC-6197-4E46-8A91-30A1826F95E0} = {BCFB72CD-96BC-4E37-A5B7-E3793CC4BB2A}
+		{B063520C-7FBF-4F11-B4DD-467504E8A997} = {EF6BCC4E-7DF6-4556-BCCB-1DD177CD7359}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {81086A12-65E3-4894-8A8C-75C581EC878E}

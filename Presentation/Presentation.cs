@@ -43,6 +43,10 @@ namespace Presentation
                 consoleWriter(str);
             }
         }
+        public void verifiqueInfo()
+        {
+            consoleWriter("Insira um número válido ou verifique se as informações estão no padrão correto.");
+        }
         public string consoleRead()
         {
             return Console.ReadLine();

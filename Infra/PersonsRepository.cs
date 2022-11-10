@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -8,14 +9,16 @@ using Domain;
 
 namespace Infra
 {
-    class PersonsRepository : IPersonRepository
+    public sealed class PersonsRepository : IPersonRepository
     {
-        private static List<Person> Persons = new List<Person>();
+        //private static List<Person> Persons = new List<Person>();
+        private static LinkedList<Person> pessoas = new LinkedList<Person>();
 
 
         public void Add(Person person)
         {
-            throw new NotImplementedException();
+            pessoas.AddLast(person);
+            Save();
         }
 
         public IList<Person> FindAll()
@@ -25,7 +28,7 @@ namespace Infra
 
         public IList<Person> FindByName(string name)
         {
-            var personsFound = Persons.Where(x => x.showPerson().ToLower().Contains(name.ToLower())).ToList();
+            var personsFound = pessoas.Where(x => x.showPerson().ToLower().Contains(name.ToLower())).ToList();
             return personsFound;
         }
 
@@ -36,27 +39,63 @@ namespace Infra
 
         public IList<Person> GetById(int id)
         {
-            var personsFound = Persons.Where(x => x.showPerson().Contains(id.ToString())).ToList();
+            var personsFound = pessoas.Where(x => x.showPerson().Contains(id.ToString())).ToList();
             return personsFound;
         }
 
         public void Remove(Person person)
         {
-            throw new NotImplementedException();
+            pessoas.Remove(person);
         }
 
         public void Save()
         {
-            throw new NotImplementedException();
+            string path = Environment.CurrentDirectory + @"\text.txt";
+            if (File.Exists(path))
+                File.Delete(path);
+            var colecaoListS = pessoas.Select(x => x.ToString());
+            File.WriteAllLines(path, colecaoListS);
         }
 
-        public void Update(Person person)
+        public void Update(Person person,Person updated)
         {
-            throw new NotImplementedException();
+            var toChange = pessoas.Find(person);
+            try
+            {
+                toChange.Value.update(updated);
+                Save();
+            }
+            catch
+            {
+                Console.WriteLine("Error on Update");
+            }
+
         }
-        public bool FirstRun()
+        public void FirstRun()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Populating Repo....");
+            Console.WriteLine();
+            string path = Environment.CurrentDirectory + @"\text.txt";
+            if (File.Exists(path))
+            {
+                var OrderLines = File.ReadAllLines(path).ToList();
+                char[] delimiters = { ';' };
+                foreach (var line in OrderLines.Select(OrderLine => OrderLine.Split(delimiters)).Select(parts =>
+                new Person(
+                    Convert.ToString(parts[1]),
+                    Convert.ToString(parts[2]),
+                    DateTime.Parse(parts[3])
+                )
+                ))
+                {
+                    Add(line);
+                }
+
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }

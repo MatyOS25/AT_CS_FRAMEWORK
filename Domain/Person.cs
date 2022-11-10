@@ -28,14 +28,21 @@ namespace Domain
         {
             return Name;
         }
-        public void showPersonDetail()
+        public void update(Person newOne)
         {
-            Console.WriteLine();
-            Console.WriteLine("Dados da pessoa:");
-            Console.WriteLine($"Nome Completo: {Name} {Sobrenome}");
-            Console.WriteLine($"Data do Aniversário: {Nascimento}");
-            birthDay(Nascimento);
+            Name = newOne.Name;
+            Sobrenome = newOne.Sobrenome;
+            Nascimento = newOne.Nascimento;
+        }
 
+        public List<String> showPersonDetail()
+        {
+            return new List<String>() {
+                        "Dados da Pessoa",
+                        $"Nome: {Name} {Sobrenome}",
+                        $"Data de Nascimento: {Nascimento}",
+                        $"{birthDay(Nascimento)}"
+                    };
         }
 
         private string birthDay(DateTime nascimento)

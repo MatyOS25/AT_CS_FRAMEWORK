@@ -13,18 +13,18 @@ namespace WorkerService
 {
     public class Worker : BackgroundService
     {
-        private readonly IPersonRepository _repository;
+        private static IPersonRepository _repository;
 
         public Worker(IPersonRepository repository)
         {
             _repository = repository;
         }
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CreateSpecificCulture("pt-BR");
             _repository.FirstRun();
-            Controller.menu();
+            Controller _controller = new(_repository);
+            _controller.menu();
         }
     }
 }

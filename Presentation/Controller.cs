@@ -9,40 +9,40 @@ namespace Presentation
 {
     public class Controller
     {
-        private static Presentation _presentation;
+        private static Presentation _presentation = new Presentation();
+        private static IPersonRepository _repository;
 
-        public Controller(Presentation presentation)
+        public Controller(IPersonRepository personRepository)
         {
-            _presentation = presentation;
+            _repository = personRepository;
         }
-        public static void menu()
+        public void menu()
         {
-            string option;
+            int option;
             do
             {
                 _presentation.listOptions();
 
-                int option = _presentation.consoleRead(0);
+                option = _presentation.consoleRead(0);
                 switch (option)
                 {
                     case 1:
-                        pesquisarPessoas();
+                        searchPeople();
                         break;
                     case 2:
                         adicionarPessoa();
                         break;
                     case 3:
-                        return false;
-
+                        break;
                     default:
-                        _presentation.consoleWriter("Escreva um número válido para prosseguir");
-                        return false;
+                        _presentation.verifiqueInfo();
+                        option = 5;
+                        break;
                 }
-
                 _presentation.pressAnyKey();
-                Console.ReadKey();
+                _presentation.consoleRead();
             }
-            while (option != "5");
+            while (option != 5);
         }
         private static void adicionarPessoa()
         {
@@ -54,11 +54,11 @@ namespace Presentation
             while (ativo == 2)
             {
                 _presentation.consoleWriter("Digite o nome da pessoa que deseja adicionar: ");
-                nome = Console.ReadLine();
+                nome = _presentation.consoleRead();
                 _presentation.consoleWriter("Digite o sobrenome da pessoa que deseja adicionar: ");
-                sobrenome = Console.ReadLine();
-                _presentation.consoleWriter("Digite a data de aniversário no formato dd/MM/yyyy: ");
-                nascimento = DateTime.Parse(Console.ReadLine());
+                sobrenome = _presentation.consoleRead();
+                _presentation.consoleWriter("Digite a data de nascimento no formato dd/MM/yyyy: ");
+                nascimento = DateTime.Parse(_presentation.consoleRead());
                 _presentation.consoleWriter();
                 _presentation.consoleWriter(new List<String>() {
                     "Os dados abaixo estão corretos?",
@@ -68,138 +68,104 @@ namespace Presentation
                 });
                 try
                 {
-                    ativo = Int32.Parse(Console.ReadLine());
+                    ativo = _presentation.consoleRead(0);
                 }
                 catch
                 {
                     _presentation.consoleWriter("Insira um número válido ou verifique se as informações estão no padrão correto.");
                 }
             }
-            pessoas.Add(new Person(nome, sobrenome, nascimento));
-            Console.WriteLine($"Adicionado");
-            Console.WriteLine();
+            _repository.Add(new Person(nome, sobrenome, nascimento));
+            _presentation.consoleWriter($"Adicionado");
+            _presentation.consoleWriter();
         }
-        void PesquisarTvShow()
+        static void searchPeople()
         {
-            Console.WriteLine("Informe o Nome da Série que deseja pesquisar:");
-            var termoPesquisa = Console.ReadLine();
-            var seriesEncontradas = _repositorio.Pesquisar(termoPesquisa);
+            _presentation.consoleWriter($"Informe o Nome da Série que deseja pesquisar:");
+            var searchQuery = _presentation.consoleRead();
+            var peopleFound = _repository.FindByName(searchQuery);
 
-            if (seriesEncontradas.Count > 0)
+            if (peopleFound.Count > 0)
             {
-                Console.WriteLine("Selecione uma das opções abaixo para visualizar os dados das séries encontrados:");
-                for (var index = 0; index < seriesEncontradas.Count; index++)
-                    Console.WriteLine($"{index} - {seriesEncontradas[index].Serie_Name}");
-
-                if (!ushort.TryParse(Console.ReadLine(), out var indexAExibir) || indexAExibir >= seriesEncontradas.Count)
+                _presentation.consoleWriter("Selecione uma das opções abaixo para visualizar os dados das pessoas encontrados:");
+                for (var index = 0; index < peopleFound.Count; index++)
+                    _presentation.consoleWriter($"{index} - {peopleFound[index].showPerson()}");
+                if (!ushort.TryParse(_presentation.consoleRead(), out var indexAExibir) || indexAExibir >= peopleFound.Count)
                 {
-                    Console.WriteLine($"Opção inválida! ");
+                    _presentation.consoleWriter($"Opção inválida! ");
                     return;
                 }
 
-                if (indexAExibir < seriesEncontradas.Count)
+                if (indexAExibir < peopleFound.Count)
                 {
-                    var serie = seriesEncontradas[indexAExibir];
-
-                    Console.WriteLine("Dados da Série");
-                    Console.WriteLine($"Nome: {serie.Serie_Name}");
-                    Console.WriteLine($"Lançamento Série: {serie.Lancamento:dd/MM/yyyy}");
-                    Console.WriteLine($"Lançado à {serie.GetTempoLancamento()} ano(s).");
-                    Console.WriteLine($"Nota: {serie.Nota}/10 ");
-
+                    var person = peopleFound[indexAExibir];
+                    _presentation.consoleWriter(person.showPersonDetail());
                 }
             }
             else
             {
-                Console.WriteLine($"Não foi encontrado nenhuma série!");
+                _presentation.consoleWriter($"Não foi encontrado nenhuma pessoa!");
             }
         }
-        void AdicionarTvShow()
+        void updatePeople()
         {
-            ///SOLICITAR USUÁRIO QUE INFORME OS DADOS DA NOVA SÉRIE
-            Console.WriteLine("Informe o nome da série que deseja adicionar:");
-            var nome_Serie = Console.ReadLine();
+            _presentation.consoleWriter($"Informe o Nome da Série que deseja alterar:");
+            var searchQuery = _presentation.consoleRead();
+            var peopleFound = _repository.FindByName(searchQuery);
 
-            Console.WriteLine("Informe o lançamento da série (formato dd/MM/yyyy):");
-            if (!DateTime.TryParse(Console.ReadLine(), out var lancamento_Serie))
+            if (peopleFound.Count > 0 && peopleFound.Count < 2)
             {
-                Console.WriteLine($"Data inválida! Dados descartados! ");
-                return;
-            }
-            Console.WriteLine("Informe uma nota para a série que deseja adicionar: ");
-            Console.WriteLine("              <<<<< 0 até 10 >>>>>  Exemplo: 9,4");
-            double nota_serie = Double.Parse(Console.ReadLine());
+                _presentation.consoleWriter(peopleFound[0].showPersonDetail());
 
-            Console.WriteLine("Os dados estão corretos?");
-            Console.WriteLine($"Nome: {nome_Serie}");
-            Console.WriteLine($"Lançamento: {lancamento_Serie:dd/MM/yyyy}");
-            Console.WriteLine($"Nota: {nota_serie}/10");
-            Console.WriteLine("1 - Sim \n2 - Não");
 
-            var opcaoParaAdicionar = Console.ReadLine();
-            if (opcaoParaAdicionar == "1")
-            {
-                ///ATRIBUIR INFORMAÇÕES OBTIDAS NO CONSOLE NA NOVA ENTIDADE
-                _repositorio.Adicionar(new Serie(nome_Serie, lancamento_Serie, nota_serie, DateTime.Now.Date));
-
-                Console.WriteLine($"Dados adicionados com sucesso!");
-            }
-            else if (opcaoParaAdicionar == "2")
-            {
-                Console.WriteLine($"Dados descartados! ");
+                var update = newPeople();
+                _repository.Update(peopleFound[0], update);
             }
             else
             {
-                Console.WriteLine($"Opção inválida! ");
+                _presentation.consoleWriter($"Foi encontrada mais de uma pessoa com o mesmo nome ou não foi encontrada nenhuma!");
             }
+
+
         }
-        void AlterarTvShow()
+        private static Person newPeople()
         {
-            Console.WriteLine("Informe o Nome da Série que deseja alterar:");
-            var termoPesquisa = Console.ReadLine();
-            var seriesEncontradas = _repositorio.Pesquisar(termoPesquisa);
+            string nome = "";
+            string sobrenome = "";
+            DateTime nascimento = new DateTime();
+            int ativo = 2;
 
-            if (seriesEncontradas.Count > 0)
+            while (ativo == 2)
             {
-                Console.WriteLine("Selecione uma das opções abaixo para visualizar os dados das séries encontrados:");
-                for (var index = 0; index < seriesEncontradas.Count; index++)
-                    Console.WriteLine($"{index} - {seriesEncontradas[index].Serie_Name}");
-
-                if (!ushort.TryParse(Console.ReadLine(), out var indexAExibir) || indexAExibir >= seriesEncontradas.Count)
+                _presentation.consoleWriter("Digite o novo valor, caso contrário de um enter!");
+                _presentation.consoleWriter("Nome: ");
+                nome = _presentation.consoleRead();
+                _presentation.consoleWriter("Sobrenome: ");
+                sobrenome = _presentation.consoleRead();
+                _presentation.consoleWriter("Data de Nascimento no formato dd/MM/yyyy: ");
+                nascimento = DateTime.Parse(_presentation.consoleRead());
+                _presentation.consoleWriter();
+                _presentation.consoleWriter(new List<String>() {
+                    "Os dados abaixo estão corretos?",
+                    $"Nome: {nome} {sobrenome}",
+                    $"Data de Aniversário: {nascimento}",
+                    $"1 - Sim", $"2 - Não"
+                });
+                try
                 {
-                    Console.WriteLine($"Opção inválida! ");
-                    return;
+                    ativo = _presentation.consoleRead(0);
                 }
-
-                if (indexAExibir < seriesEncontradas.Count)
+                catch
                 {
-                    var serie = seriesEncontradas[indexAExibir];
-
-                    Console.WriteLine("Dados da Série");
-                    Console.WriteLine($"Nome: {serie.Serie_Name}");
-                    Console.WriteLine($"Lançamento Série: {serie.Lancamento:dd/MM/yyyy}");
-                    Console.WriteLine($"Lançado à {serie.GetTempoLancamento()} ano(s).");
-                    Console.WriteLine($"Nota: {serie.Nota}/10 ");
-
-                    Alterar();
-                    _repositorio.Alterar();
-
+                    _presentation.consoleWriter("Insira um número válido ou verifique se as informações estão no padrão correto.");
                 }
             }
-            else
-            {
-                Console.WriteLine($"Não foi encontrado nenhuma série!");
-            }
-        }
-
-        void Alterar()
-        {
-            Console.WriteLine("Qual a nova nota para a série? ");
-            double nota_serie_alter = Double.Parse(Console.ReadLine());
+            return new Person(nome, sobrenome, nascimento);
         }
         void ExcluirTvShow()
         {
 
         }
+
     }
 }

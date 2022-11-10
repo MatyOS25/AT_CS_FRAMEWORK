@@ -15,8 +15,8 @@ namespace Domain
         void Add(Person person);
         void Save();
         void Remove(Person person);
-        void Update(Person person);
-        bool FirstRun();
+        void Update(Person person, Person updated);
+        void FirstRun();
 
     }
 }
