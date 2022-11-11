@@ -12,6 +12,7 @@ namespace Domain
         IList<Person> FindAll();
         IList<Person> FindByName(string name);
         IList<Person> GetById(int id);
+        IList<Person> TodayBirthday();
         void Add(Person person);
         void Save();
         void Remove(Person person);

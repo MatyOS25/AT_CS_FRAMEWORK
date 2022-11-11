@@ -15,6 +15,7 @@ namespace Infra
         private static LinkedList<Person> pessoas = new LinkedList<Person>();
 
 
+
         public void Add(Person person)
         {
             pessoas.AddLast(person);
@@ -34,7 +35,21 @@ namespace Infra
 
         public IList<Person> GetAll()
         {
-            throw new NotImplementedException();
+            return pessoas.ToList();
+        }
+
+        public IList<Person> TodayBirthday()
+        {
+            var personsFound = pessoas.ToList();
+            var birthdaysFound = new List<Person>();
+            foreach (var person in pessoas)
+            {
+                if (person.todayBirth())
+                {
+                    birthdaysFound.Add(person);
+                }
+            }
+            return birthdaysFound;
         }
 
         public IList<Person> GetById(int id)
@@ -46,6 +61,7 @@ namespace Infra
         public void Remove(Person person)
         {
             pessoas.Remove(person);
+            Save();
         }
 
         public void Save()

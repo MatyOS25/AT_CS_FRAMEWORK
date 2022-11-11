@@ -44,6 +44,14 @@ namespace Domain
                         $"{birthDay(Nascimento)}"
                     };
         }
+        public List<String> showPersonRaw()
+        {
+            return new List<String>() {
+                        $"{Name}",
+                        $"{Sobrenome}",
+                        $"{Nascimento}"
+                    };
+        }
 
         private string birthDay(DateTime nascimento)
         {
@@ -66,6 +74,14 @@ namespace Domain
             {
                 return $"Essa Pessoa está fazendo aniversário!!";
             }
+        }
+        public bool todayBirth()
+        {
+            if (birthDay(Nascimento) == "Essa Pessoa está fazendo aniversário!!")
+            {
+                return true;
+            }
+            return false;
         }
 
     }

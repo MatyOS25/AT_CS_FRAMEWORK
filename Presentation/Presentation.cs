@@ -15,9 +15,13 @@ namespace Presentation
         public void listOptions()
         {
             consoleWriter("Selecione uma das opções abaixo:");
-            consoleWriter("1 - Pesquisar pessoas");
+            consoleWriter("1 - Listar pessoas");
             consoleWriter("2 - Adicionar nova pessoa");
-            consoleWriter("3 - Sair");
+            consoleWriter("3 - Pesquisar por nome");
+            consoleWriter("4 - Alterar cadastro");
+            consoleWriter("5 - Aniversariantes do dia");
+            consoleWriter("6 - Remover Pessoa");
+            consoleWriter("7 - Sair");
         }
         public void pressAnyKey()
         {
